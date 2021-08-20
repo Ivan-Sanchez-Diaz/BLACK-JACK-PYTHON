@@ -18,7 +18,7 @@ loses = []
 class MainWindow(QMainWindow):
     def __init__(self):
 
-        #parametros basicos
+        #PARAMETROS BASICOS(QUITAR MARCO DE WINDWOS,TAMAÑO;GUI)
         QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -28,18 +28,24 @@ class MainWindow(QMainWindow):
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
 
+        #ARRASTRAR VENTANA
         def move(event,self):
           if event.buttons() == Qt.LeftButton:
               self.move(self.pos() + event.globalPos() - self.dragPos)
               self.dragPos = event.globalPos()
               event.accept()
 
+        #ARRASTRAR VENTANA
         def moveWindow(event):
           move(event,self)
   
         self.ui.frame_title.mouseMoveEvent = moveWindow
 
+        #DAR CARTA AL CRUPIER
         def hitDaler(self):
+          if dalerCount[0]<17:
+            addCard(self,self.ui.daler_page_layout,randint(1,11),dalerCount,False)
+            
           if dalerCount[0]>21:
             self.ui.hit.setEnabled(False)
             self.ui.hit.setText("YOU WIN!")
@@ -61,9 +67,8 @@ class MainWindow(QMainWindow):
                 }
             ''')
                
-          if dalerCount[0]<17:
-            addCard(self,self.ui.daler_page_layout,randint(1,11),dalerCount,False)
-
+          
+        #PLANTARSE
         def stand(self):
           for buttons in self.ui.daler_page.findChildren(QPushButton):
             buttons.setStyleSheet('''
@@ -121,7 +126,8 @@ class MainWindow(QMainWindow):
         
           
         def simulate(self):
-
+          
+          ############SIMULACION DE LAS 100 PARTIDAS
           for i in range(0,100):
             simulate = []
             cardCount = [0]
@@ -161,6 +167,7 @@ class MainWindow(QMainWindow):
           if playerCount[0]>21:
             Lose(self)
 
+        #AGREGAR CARTA JUGADOR
         def addCard(self,layout,value,list,bool):
           button = QPushButton("1",self)
           list.append(list[0]+1)
